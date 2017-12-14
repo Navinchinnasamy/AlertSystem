@@ -57,7 +57,40 @@ class functions {
 		// array(':table' => $table, ':where' => $where, ':orderColumn' => $orderColumn, ':order' => $order)
 		$qry->execute();
 		$result = $qry->fetchAll(PDO::FETCH_ASSOC);
+		//$qry->close();
+		return $result;
+	}
+	
+	public function insertUpdate($table, $inp, $other = null){
+		$columns = array_keys($inp);
+		$values = str_repeat("?, ", count($columns));
+		$values = trim($values, ', ');
+		$columns = implode(', ', $columns);
+		$sql = "INSERT INTO {$table} ({$columns}) VALUES ({$values})";
+		if(!empty($other)){
+			if(isset($other['for']) && $other['for'] == "update"){
+				$sql = "UPDATE {$table} ";
+			}
+		}
+		$values = array_values($inp);
+		$qry = $this->conn->prepare($sql);
+		for($i = 1; $i <= count($values); $i++){
+			$qry->bindValue($i, $values[$i-1]);
+		}
+		$qry->execute();
+		//$qry->close();
+		return "success";
+	}
+	
+	public function checkDuplicate($table, $column, $value){
+		$where  = " AND {$column} = :value ";
+		$sql = "SELECT * FROM `{$table}` WHERE status='active' {$where}";
+		$qry = $this->conn->prepare($sql);
+		$qry->bindValue(':value', $value);
 		
+		$qry->execute();
+		$result = $qry->fetchAll(PDO::FETCH_ASSOC);
+		//$qry->close();
 		return $result;
 	}
 }

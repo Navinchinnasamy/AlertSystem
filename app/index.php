@@ -20,7 +20,7 @@
 		curl_setopt($curl_handle, CURLOPT_USERPWD, "$apikey");
 		curl_setopt($curl_handle, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
 		curl_setopt($curl_handle, CURLOPT_POST, TRUE);
-		curl_setopt($curl_handle, CURLOPT_POSTFIELDS,"data={$data}");
+		curl_setopt($curl_handle, CURLOPT_POSTFIELDS,"{$data}");
 		curl_setopt($curl_handle,CURLOPT_RETURNTRANSFER, TRUE);
 		//curl_setopt($curl_handle,CURLOPT_HTTPHEADER, array('Content-type: application/json'));
 		$response = curl_exec($curl_handle);
